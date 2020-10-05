@@ -16,31 +16,29 @@ class HashTable:
     """
     A hash table that with `capacity` buckets
     that accepts string keys
-
     Implement this.
     """
-
     def __init__(self, capacity):
         # Your code here
-
+        self.hash_array = [None]*capacity
+        self.capacity = capacity
+        self.number_of_items = 0
 
     def get_num_slots(self):
         """
         Return the length of the list you're using to hold the hash
         table data. (Not the number of items stored in the hash table,
         but the number of slots in the main list.)
-
         One of the tests relies on this.
-
         Implement this.
         """
         # Your code here
+        return self.capacity
 
 
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
-
         Implement this.
         """
         # Your code here
@@ -63,6 +61,10 @@ class HashTable:
         Implement this, and/or FNV-1.
         """
         # Your code here
+        hash = 5381
+        for c in key:
+            hash = (hash * 33) + ord(c)
+        return hash
 
 
     def hash_index(self, key):
@@ -73,37 +75,46 @@ class HashTable:
         #return self.fnv1(key) % self.capacity
         return self.djb2(key) % self.capacity
 
+        
+
     def put(self, key, value):
         """
         Store the value with the given key.
-
         Hash collisions should be handled with Linked List Chaining.
-
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        self.hash_array[index] = HashTableEntry(key, value)
+
 
 
     def delete(self, key):
-        """
-        Remove the value stored with the given key.
-
+        """ Remove the value stored with the given key.
         Print a warning if the key is not found.
-
-        Implement this.
-        """
+        Implement this."""
         # Your code here
+        index = self.hash_index(key)
+        if index > self.capacity:
+            print("Out of range!!!")
+        if self.hash_array[index] is None:
+            print('Key not found')   
+        self.hash_array[index] = None     
+
 
 
     def get(self, key):
         """
         Retrieve the value stored with the given key.
-
         Returns None if the key is not found.
-
         Implement this.
         """
         # Your code here
+        index_value = self.hash_index(key)
+        if self.hash_array[index_value] is not None:
+            return self.hash_array[index_value].value
+        else:
+            None    
 
 
     def resize(self, new_capacity):
